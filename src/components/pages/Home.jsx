@@ -1,23 +1,51 @@
-import React, { useEffect } from "react";
-import { Button, Card, Col, Row } from "react-bootstrap";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Col, InputGroup, Row, Form} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductsThunk } from "../../store/slices/products.slice";
+import { filterNewProductsThunk, filterProductsCategoryThunk, getProductsThunk } from "../../store/slices/products.slice";
 
 const Home = () => {
     const dispatch = useDispatch();
 
     const productList = useSelector((state) => state.products);
 
+    const [categories, setCategories] = useState([]);
+
+    const [searchProduct, setSearchProduct] = useState("");
+
 
     useEffect(() =>{
         dispatch(getProductsThunk());
+
+        axios.get('https://e-commerce-api-v2.academlo.tech/api/v1/categories')
+            .then(res => setCategories(res.data));
     },[])
 
-    console.log(productList);
+    console.log(searchProduct);
 
   return (
     <div>
-      <h1>Home</h1>
+
+
+        <InputGroup className="mb-5" size="md">
+        <Form.Control
+          placeholder="Search product"
+          aria-label="Search products"
+          aria-describedby="basic-addon2"
+          value={searchProduct}
+          onChange={e => setSearchProduct(e.target.value)}
+        />
+        <Button
+          onClick={() => dispatch(filterNewProductsThunk(searchProduct.toString()))}
+          variant="outline-secondary"
+          id="button-addon2"
+        >Search</Button>
+      </InputGroup>
+      
+
+      {categories.map((category) => (
+        <Button key={category.id} onClick={() => dispatch(filterProductsCategoryThunk(category.id))}>{category.name}</Button>
+      ))}
 
       <ul>
         <Row xs={1} md={4} className="g-4">
