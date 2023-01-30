@@ -1,10 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
+import  setInputName  from './slices/inputName.slice'
+import isloadingSlice from './slices/isloading.slice'
 import  productsSlice  from './slices/products.slice'
 
 export default configureStore({
     reducer: {
 
-        products: productsSlice
+        products: productsSlice,
+        loading: isloadingSlice,
+        inputname: setInputName
 
     }
 })

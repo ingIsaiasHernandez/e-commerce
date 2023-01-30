@@ -1,31 +1,34 @@
-import { HashRouter, Route, Routes } from 'react-router-dom'
-import AppNavbar from './components/AppNavbar'
-import Home from './components/pages/Home'
-import Login from './components/pages/Login'
-import ProductsDetail from './components/pages/ProductsDetail'
-import Purchases from './components/pages/Purchases'
-import './style.css'
-
+import { useSelector } from "react-redux";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import AppNavbar from "./components/AppNavbar";
+import LoadingScreen from "./components/LoadingScreen";
+import Home from "./components/pages/Home";
+import Login from "./components/pages/Login";
+import ProductsDetail from "./components/pages/ProductsDetail";
+import Purchases from "./components/pages/Purchases";
+import ProtectedRoutes from "./components/ProtectedRoutes";
 
 function App() {
+  const isLoading = useSelector(state => state.isLoading);
 
   return (
-      <HashRouter>
+    <HashRouter>
+      <AppNavbar />
 
-        <AppNavbar/>
+      {isLoading && <LoadingScreen></LoadingScreen>}
 
-        <Routes>
-          <Route path='/' element={<Home/>}></Route>
-          <Route path='/product/:id' element={<ProductsDetail/>}></Route>
-          <Route path='/login' element={<Login/>}></Route>
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/product/:id" element={<ProductsDetail />}></Route>
+        <Route path="/login" element={<Login />}></Route>
 
-          {/* Routa protegida */}
-          <Route path='/purchases' element={<Purchases/>}></Route>
-
-        </Routes>
-
-      </HashRouter>
-  )
+        {/* Routa protegida */}
+        <Route element={<ProtectedRoutes/>}>
+          <Route path="/purchases" element={<Purchases />}></Route>
+        </Route>
+      </Routes>
+    </HashRouter>
+  );
 }
 
-export default App
+export default App;
